@@ -1,4 +1,4 @@
-package com.mark.service;
+package com.mark.demo.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.RetryCallback;
@@ -15,13 +15,12 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 @Slf4j
 @Component
-public class RetryService {
+public class DemoRetryService {
 
     private static AtomicLong atomicLong = new AtomicLong(0);
 
     @Retryable(value = RuntimeException.class,maxAttempts = 5,backoff = @Backoff(delay = 1000))
     public String executeRetry() {
-
         RetryTemplate retryTemplate = RetryTemplate.builder()
                 .maxAttempts(3)
                 .build();

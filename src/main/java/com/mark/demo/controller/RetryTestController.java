@@ -1,14 +1,10 @@
-package com.mark.controller;
+package com.mark.demo.controller;
 
-import com.mark.service.RetryService;
+import com.mark.demo.service.DemoRetryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author mark
@@ -19,11 +15,11 @@ import java.util.concurrent.atomic.AtomicLong;
 public class RetryTestController {
 
     @Autowired
-    private RetryService retryService;
+    private DemoRetryService demoRetryService;
 
     @RequestMapping("/retryTest")
     public String execute() {
-        return retryService.executeRetry();
+        return demoRetryService.executeRetry();
     }
 
 
