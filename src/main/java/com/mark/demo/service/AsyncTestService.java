@@ -1,7 +1,6 @@
 package com.mark.demo.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,7 @@ public class AsyncTestService {
         }
     }
 
-   // @Async("myExecutor")
+    // @Async("myExecutor")
     public void execute2() {
         for (int i = 0; i < 100; i++) {
             log.info("asyncTest run ---> {}", i);

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -20,8 +21,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 @RestController
 public class ASyncTestController {
 
-    @Autowired
-    private ThreadPoolTaskExecutor myExecutor;
+    @Autowired(required = false)
+    private ThreadPoolTaskExecutor taskExecutor;
 
     @Autowired
     private AsyncTestService asyncTestService;
@@ -29,9 +30,9 @@ public class ASyncTestController {
     private AtomicInteger atomicInt = new AtomicInteger(0);
 
     @RequestMapping("/test/async")
-    public String doAsync() {
+    public String doAsync(@RequestParam(required = false, defaultValue = "500") int count) {
         int seqNum = this.atomicInt.incrementAndGet();
-        for (int idx = 0; idx < 500; idx++) {
+        for (int idx = 0; idx < count; idx++) {
             asyncTestService.execute(seqNum + "-" + idx);
         }
         return "ok, seqNum:" + seqNum;
@@ -40,14 +41,13 @@ public class ASyncTestController {
     @RequestMapping("/test/async/stat")
     public Map<String, Object> getStatInfo() {
         Map<String, Object> statMap = new HashMap<>();
-        //获取当前线程池中线程数量
-        statMap.put("poolSize", myExecutor.getPoolSize());
-        //获取正在执行任务的线程数量
-        statMap.put("activeCount", myExecutor.getActiveCount());
-        //获取等待执行的任务数量
-        statMap.put("queueSize", myExecutor.getQueueSize());
-        //获取队列的最大容量
-        statMap.put("queueCapacity", myExecutor.getQueueCapacity());
+        statMap.put("corePoolSize", taskExecutor.getCorePoolSize());
+        statMap.put("maxPoolSize", taskExecutor.getMaxPoolSize());
+        statMap.put("poolSize", taskExecutor.getPoolSize());
+        statMap.put("queueCapacity", taskExecutor.getQueueCapacity());
+        statMap.put("activeCount", taskExecutor.getActiveCount());
+        statMap.put("queueSize", taskExecutor.getQueueSize());
+        statMap.put("threadNamePrefix", taskExecutor.getThreadNamePrefix());
         log.info("statMap===>{}", statMap);
         return statMap;
     }
